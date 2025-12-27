@@ -1,45 +1,130 @@
+/* Paleta de colores Nothing Phone */
 :root {
-    --nothing-red: #ff0031;
+    --bg-color: #000000;
+    --card-bg: #111111;
+    --accent-red: #ff0031;
+    --text-primary: #ffffff;
+    --text-secondary: #888888;
+    --border-color: #222222;
 }
 
 body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
     overflow-x: hidden;
 }
 
 .app-container {
-    max-width: 500px;
+    width: 100%;
+    max-width: 480px;
     min-height: 100vh;
+    padding-bottom: 30px;
 }
 
-#map {
-    height: 35vh;
-    border-radius: 20px;
-    z-index: 1;
+/* Logo y Header */
+.logo {
+    letter-spacing: 3px;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+/* Buscador y Sugerencias */
+.search-wrapper {
+    z-index: 2000;
+}
+
+#placeInput {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: white;
+    border-radius: 12px;
+    padding: 12px 15px;
+    font-size: 0.95rem;
+}
+
+#placeInput:focus {
+    border-color: var(--accent-red);
+    box-shadow: 0 0 0 1px var(--accent-red);
 }
 
 #suggestions {
-    z-index: 1000;
-    max-height: 250px;
+    background-color: #1a1a1a;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    margin-top: 5px;
+    max-height: 200px;
     overflow-y: auto;
+    z-index: 2100;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
 }
 
 .list-group-item-dark {
-    background-color: #1a1a1a;
-    border-color: #333;
-    color: white;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #222;
+    color: #ccc;
+    padding: 12px 15px;
+    font-size: 0.85rem;
     cursor: pointer;
-    font-size: 0.9rem;
+}
+
+.list-group-item-dark:last-child {
+    border-bottom: none;
 }
 
 .list-group-item-dark:hover {
-    background-color: #2a2a2a;
+    background-color: #222;
+    color: white;
 }
 
-input:focus {
-    box-shadow: none !important;
-    border-color: var(--nothing-red) !important;
+/* Mapa */
+#map {
+    height: 40vh;
+    width: 100%;
+    border-radius: 24px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    z-index: 1; /* Importante para que las sugerencias queden arriba */
 }
 
-/* Estilo para que parezca app nativa */
-.card { border: 1px solid rgba(255,255,255,0.1); }
+/* Tarjeta de Información */
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 5px;
+}
+
+.status-label {
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#distance {
+    font-family: 'Monaco', 'Consolas', monospace;
+    font-weight: bold;
+}
+
+/* Botones */
+.btn-danger {
+    background-color: var(--accent-red);
+    border: none;
+    border-radius: 14px;
+    transition: transform 0.2s active;
+}
+
+.btn-danger:active {
+    transform: scale(0.98);
+}
+
+.btn-outline-secondary {
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
