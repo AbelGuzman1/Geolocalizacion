@@ -1,56 +1,104 @@
 :root {
     --nothing-red: #ff0031;
-    --uber-dark: #121212;
+    --card-bg: #121212;
+    --border-soft: #262626;
 }
 
 body {
     background-color: #000;
     font-family: 'Inter', sans-serif;
+    color: white;
+    overflow-x: hidden;
 }
 
 .app-container {
     max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
 }
 
-.logo { letter-spacing: 4px; }
+/* Header */
+.logo { 
+    letter-spacing: 5px; 
+    font-weight: 800;
+}
 
-#map {
-    height: 45vh;
-    width: 100%;
-    border-radius: 28px;
-    filter: grayscale(1) invert(1) brightness(0.8); /* Efecto Mapa Uber Dark */
-    border: 1px solid #222;
+/* Buscador Estilo Uber */
+.input-group {
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border-soft);
 }
 
 #placeInput {
-    border-radius: 0 12px 12px 0;
-    padding: 12px;
+    background-color: var(--card-bg);
+    border: none;
+    color: white;
+    padding: 14px;
 }
 
 .input-group-text {
-    border-radius: 12px 0 0 12px;
+    background-color: var(--card-bg);
+    border: none;
+    padding-left: 18px;
 }
 
+/* Sugerencias Flotantes */
 #suggestions {
-    z-index: 2000;
-    border-radius: 12px;
-    overflow: hidden;
+    z-index: 9999;
     background: #1a1a1a;
-    border: 1px solid #333;
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    margin-top: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
 }
 
 .list-group-item-dark {
-    background: #1a1a1a;
-    color: #eee;
+    background: transparent;
+    color: #dfdfdf;
     border: none;
-    border-bottom: 1px solid #222;
-    padding: 15px;
+    border-bottom: 1px solid var(--border-soft);
+    padding: 16px;
     font-size: 0.9rem;
 }
 
-.list-group-item-dark:hover { background: #222; }
+.list-group-item-dark:last-child { border-bottom: none; }
+.list-group-item-dark:hover { background: #222; color: white; }
 
-.uppercase { text-transform: uppercase; letter-spacing: 1px; }
+/* Mapa Moderno */
+#map {
+    height: 42vh;
+    width: 100%;
+    border-radius: 28px;
+    border: 1px solid var(--border-soft);
+    z-index: 1;
+}
 
-/* Personalización del marcador de usuario */
+/* Tarjeta de Información */
+.card {
+    background-color: var(--card-bg) !important;
+    border: 1px solid var(--border-soft) !important;
+}
+
+.tracking-wider { letter-spacing: 1px; }
+
+/* Botones */
+#activateBtn {
+    border-radius: 16px;
+    transition: all 0.3s ease;
+}
+
+#activateBtn.btn-success {
+    background-color: #00c853 !important;
+}
+
+#stopBtn {
+    border-radius: 16px;
+    background: transparent;
+    border: 1px solid var(--border-soft);
+    color: #666;
+}
+
+/* Limpieza de Leaflet */
 .leaflet-container { background: #000 !important; }
+.leaflet-control-attribution { display: none !important; }
