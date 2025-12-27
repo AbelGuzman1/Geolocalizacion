@@ -1,130 +1,56 @@
-/* Paleta de colores Nothing Phone */
 :root {
-    --bg-color: #000000;
-    --card-bg: #111111;
-    --accent-red: #ff0031;
-    --text-primary: #ffffff;
-    --text-secondary: #888888;
-    --border-color: #222222;
+    --nothing-red: #ff0031;
+    --uber-dark: #121212;
 }
 
 body {
-    background-color: var(--bg-color);
-    color: var(--text-primary);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    overflow-x: hidden;
+    background-color: #000;
+    font-family: 'Inter', sans-serif;
 }
 
 .app-container {
-    width: 100%;
     max-width: 480px;
-    min-height: 100vh;
-    padding-bottom: 30px;
 }
 
-/* Logo y Header */
-.logo {
-    letter-spacing: 3px;
-    font-weight: 900;
-    text-transform: uppercase;
-}
+.logo { letter-spacing: 4px; }
 
-/* Buscador y Sugerencias */
-.search-wrapper {
-    z-index: 2000;
+#map {
+    height: 45vh;
+    width: 100%;
+    border-radius: 28px;
+    filter: grayscale(1) invert(1) brightness(0.8); /* Efecto Mapa Uber Dark */
+    border: 1px solid #222;
 }
 
 #placeInput {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    color: white;
-    border-radius: 12px;
-    padding: 12px 15px;
-    font-size: 0.95rem;
+    border-radius: 0 12px 12px 0;
+    padding: 12px;
 }
 
-#placeInput:focus {
-    border-color: var(--accent-red);
-    box-shadow: 0 0 0 1px var(--accent-red);
+.input-group-text {
+    border-radius: 12px 0 0 12px;
 }
 
 #suggestions {
-    background-color: #1a1a1a;
-    border: 1px solid var(--border-color);
+    z-index: 2000;
     border-radius: 12px;
-    margin-top: 5px;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 2100;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    overflow: hidden;
+    background: #1a1a1a;
+    border: 1px solid #333;
 }
 
 .list-group-item-dark {
-    background-color: transparent;
+    background: #1a1a1a;
+    color: #eee;
     border: none;
     border-bottom: 1px solid #222;
-    color: #ccc;
-    padding: 12px 15px;
-    font-size: 0.85rem;
-    cursor: pointer;
+    padding: 15px;
+    font-size: 0.9rem;
 }
 
-.list-group-item-dark:last-child {
-    border-bottom: none;
-}
+.list-group-item-dark:hover { background: #222; }
 
-.list-group-item-dark:hover {
-    background-color: #222;
-    color: white;
-}
+.uppercase { text-transform: uppercase; letter-spacing: 1px; }
 
-/* Mapa */
-#map {
-    height: 40vh;
-    width: 100%;
-    border-radius: 24px;
-    margin-bottom: 20px;
-    border: 1px solid var(--border-color);
-    z-index: 1; /* Importante para que las sugerencias queden arriba */
-}
-
-/* Tarjeta de Información */
-.card {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 24px;
-    padding: 5px;
-}
-
-.status-label {
-    color: var(--text-secondary);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-#distance {
-    font-family: 'Monaco', 'Consolas', monospace;
-    font-weight: bold;
-}
-
-/* Botones */
-.btn-danger {
-    background-color: var(--accent-red);
-    border: none;
-    border-radius: 14px;
-    transition: transform 0.2s active;
-}
-
-.btn-danger:active {
-    transform: scale(0.98);
-}
-
-.btn-outline-secondary {
-    border-radius: 14px;
-    border: 1px solid var(--border-color);
-    color: var(--text-secondary);
-}
+/* Personalización del marcador de usuario */
+.leaflet-container { background: #000 !important; }
