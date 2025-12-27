@@ -1,6 +1,5 @@
 let map = L.map('map', { zoomControl: false }).setView([18.4861, -69.9312], 12);
 
-// Capa de mapa estilo Uber Dark (CartoDB Dark Matter)
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; OpenStreetMap'
 }).addTo(map);
@@ -47,52 +46,59 @@ function seleccionarLugar(place) {
     map.setView([targetCoords.lat, targetCoords.lng], 15);
 }
 
-// B. INICIAR VIAJE (CON RUTA ESTILO UBER)
+// B. LÓGICA DE ACTUALIZACIÓN DE TRAYECTO
+function actualizarTrayecto(lat, lon) {
+    const userPos = [lat, lon];
+    const targetPos = [targetCoords.lat, targetCoords.lng];
+
+    // 1. Dibujar línea estilo Uber (Punteada Roja)
+    if (routeLine) map.removeLayer(routeLine);
+    routeLine = L.polyline([userPos, targetPos], {
+        color: '#ff0031',
+        weight: 4,
+        dashArray: '10, 15',
+        opacity: 0.8
+    }).addTo(map);
+
+    // 2. Marcador de usuario (Punto azul)
+    if (userMarker) map.removeLayer(userMarker);
+    userMarker = L.circleMarker(userPos, { 
+        color: '#fff', fillColor: '#007bff', fillOpacity: 1, weight: 2, radius: 9 
+    }).addTo(map);
+
+    // 3. Distancia y Ajuste de vista
+    const dist = calcularDistancia(lat, lon, targetCoords.lat, targetCoords.lng);
+    document.getElementById('distance').innerText = `${dist.toFixed(0)} m`;
+
+    const bounds = L.latLngBounds([userPos, targetPos]);
+    map.fitBounds(bounds, { padding: [70, 70] });
+
+    if (dist < 150) notificarLlegada();
+}
+
+// C. INICIAR VIAJE
 activateBtn.addEventListener('click', function() {
     if (!targetCoords) return alert("Por favor, selecciona un destino.");
     
     Notification.requestPermission();
     
-    // UI Update
     this.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i> VIAJE INICIADO';
     this.classList.replace('btn-danger', 'btn-success');
     this.disabled = true;
     stopBtn.classList.remove('d-none');
 
-    // Notificación inicial para el reloj
     new Notification("✅ Viaje Iniciado", {
-        body: `Rastreador activado hacia ${document.getElementById('targetName').innerText}`,
-        silent: false
+        body: `Rumbo a ${document.getElementById('targetName').innerText}`,
     });
 
+    // CAPTURA INICIAL (Para mostrar la línea al instante)
+    navigator.geolocation.getCurrentPosition(pos => {
+        actualizarTrayecto(pos.coords.latitude, pos.coords.longitude);
+    }, err => console.error("Error GPS inicial"), { enableHighAccuracy: true });
+
+    // SEGUIMIENTO EN VIVO
     watchId = navigator.geolocation.watchPosition(pos => {
-        const { latitude, longitude } = pos.coords;
-        const userPos = [latitude, longitude];
-        const targetPos = [targetCoords.lat, targetCoords.lng];
-
-        // 1. Dibujar línea de ruta estilo Uber
-        if (routeLine) map.removeLayer(routeLine);
-        routeLine = L.polyline([userPos, targetPos], {
-            color: '#ff0031',
-            weight: 3,
-            dashArray: '8, 12',
-            opacity: 0.8
-        }).addTo(map);
-
-        // 2. Marcador de usuario (Punto azul GPS)
-        if (userMarker) map.removeLayer(userMarker);
-        userMarker = L.circleMarker(userPos, { 
-            color: '#fff', fillColor: '#007bff', fillOpacity: 1, weight: 2, radius: 8 
-        }).addTo(map);
-
-        // 3. Cálculo de distancia y ajuste de vista
-        const dist = calcularDistancia(latitude, longitude, targetCoords.lat, targetCoords.lng);
-        document.getElementById('distance').innerText = `${dist.toFixed(0)} m`;
-
-        const bounds = L.latLngBounds([userPos, targetPos]);
-        map.fitBounds(bounds, { padding: [80, 80] });
-
-        if (dist < 150) notificarLlegada();
+        actualizarTrayecto(pos.coords.latitude, pos.coords.longitude);
     }, null, { enableHighAccuracy: true });
 });
 
