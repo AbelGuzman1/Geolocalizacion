@@ -35,6 +35,7 @@ body {
     border: none;
     color: white;
     padding: 14px;
+    box-shadow: none !important;
 }
 
 .input-group-text {
@@ -51,6 +52,8 @@ body {
     border-radius: 12px;
     margin-top: 8px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    max-height: 250px;
+    overflow-y: auto;
 }
 
 .list-group-item-dark {
@@ -65,13 +68,14 @@ body {
 .list-group-item-dark:last-child { border-bottom: none; }
 .list-group-item-dark:hover { background: #222; color: white; }
 
-/* Mapa Moderno */
+/* Mapa Moderno - SIN FILTROS DE OSCURIDAD */
 #map {
     height: 42vh;
     width: 100%;
     border-radius: 28px;
     border: 1px solid var(--border-soft);
     z-index: 1;
+    background: #111; /* Fondo neutro mientras carga */
 }
 
 /* Tarjeta de Información */
@@ -90,6 +94,7 @@ body {
 
 #activateBtn.btn-success {
     background-color: #00c853 !important;
+    border: none;
 }
 
 #stopBtn {
@@ -99,6 +104,15 @@ body {
     color: #666;
 }
 
-/* Limpieza de Leaflet */
-.leaflet-container { background: #000 !important; }
+/* Ajustes técnicos de Leaflet para claridad */
+.leaflet-container { 
+    background: #000 !important; 
+}
+
+/* Asegura que la línea roja sea brillante */
+.leaflet-interactive {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
 .leaflet-control-attribution { display: none !important; }
