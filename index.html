@@ -4,34 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GeoFocus Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="manifest" href="manifest.json">
 </head>
-<body>
-    <div class="app-container">
-        <header>
-            <h1 class="logo">GEO<span>FOCUS</span></h1>
+<body class="bg-black text-white">
+
+    <div class="container-fluid p-3 app-container">
+        <header class="text-center py-3">
+            <h1 class="h4 fw-bold logo">GEO<span class="text-danger">FOCUS</span></h1>
         </header>
 
-        <section class="search-section">
-            <input type="text" id="placeInput" placeholder="Escribe un lugar (ej: Agora Mall)">
-            <button id="searchBtn">BUSCAR</button>
-        </section>
-
-        <div id="map"></div>
-
-        <section class="info-card">
-            <div class="status-group">
-                <span class="label">OBJETIVO:</span>
-                <span id="targetName">Ninguno</span>
+        <div class="search-wrapper position-relative mb-3">
+            <div class="input-group shadow-sm">
+                <input type="text" id="placeInput" class="form-control bg-dark text-white border-secondary" placeholder="¿A dónde vas?" autocomplete="off">
+                <button id="searchBtn" class="btn btn-danger px-4">BUSCAR</button>
             </div>
-            <div class="status-group">
-                <span class="label">DISTANCIA:</span>
-                <span id="distance">0m</span>
+            <ul id="suggestions" class="list-group position-absolute w-100 shadow-lg mt-1 d-none">
+                </ul>
+        </div>
+
+        <div id="map" class="shadow-sm border border-secondary mb-3"></div>
+
+        <div class="card bg-dark border-secondary shadow-lg rounded-4 overflow-hidden">
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-secondary small">OBJETIVO</span>
+                    <span id="targetName" class="fw-bold">Sin definir</span>
+                </div>
+                <div class="d-flex justify-content-between mb-4">
+                    <span class="text-secondary small">DISTANCIA</span>
+                    <span id="distance" class="badge bg-danger fs-6 px-3">0 m</span>
+                </div>
+                <button id="activateBtn" class="btn btn-outline-light w-100 py-3 fw-bold rounded-3">
+                    ACTIVAR RADAR GPS
+                </button>
             </div>
-            <button id="activateBtn" class="btn-main">ACTIVAR RADAR</button>
-        </section>
+        </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
