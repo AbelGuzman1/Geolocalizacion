@@ -1,50 +1,86 @@
-let map = L.map('map').setView([18.4861, -69.9312], 13);
+let map = L.map('map', { zoomControl: false }).setView([18.4861, -69.9312], 13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-let marker, userMarker;
+let marker, userMarker, watchId;
 let targetCoords = null;
-let watchId = null;
 
-// 1. BUSCADOR DE LUGARES
-document.getElementById('searchBtn').addEventListener('click', async () => {
-    const query = document.getElementById('placeInput').value;
-    if(!query) return;
-    
-    const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`);
-    const data = await response.json();
+const placeInput = document.getElementById('placeInput');
+const suggestionsList = document.getElementById('suggestions');
 
-    if (data.length > 0) {
-        const { lat, lon, display_name } = data[0];
-        targetCoords = { lat: parseFloat(lat), lng: parseFloat(lon) };
-        
-        if (marker) map.removeLayer(marker);
-        marker = L.marker([lat, lon]).addTo(map).bindPopup("Destino").openPopup();
-        map.setView([lat, lon], 16);
-        
-        document.getElementById('targetName').innerText = display_name.split(',')[0];
-    } else {
-        alert("Lugar no encontrado");
+// A. SUGERENCIAS EN TIEMPO REAL
+placeInput.addEventListener('input', async (e) => {
+    const val = e.target.value;
+    if (val.length < 3) {
+        suggestionsList.classList.add('d-none');
+        return;
     }
+
+    try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${val}&limit=5`);
+        const data = await res.json();
+        
+        suggestionsList.innerHTML = '';
+        if (data.length > 0) {
+            suggestionsList.classList.remove('d-none');
+            data.forEach(place => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item list-group-item-dark';
+                li.innerText = place.display_name;
+                li.onclick = () => seleccionarLugar(place);
+                suggestionsList.appendChild(li);
+            });
+        }
+    } catch (err) { console.error("Error buscando sugerencias"); }
 });
 
-// 2. RADAR Y SEGUIMIENTO GPS
-document.getElementById('activateBtn').addEventListener('click', () => {
-    if (!targetCoords) return alert("Primero busca un destino en el mapa");
+function seleccionarLugar(place) {
+    targetCoords = { lat: parseFloat(place.lat), lng: parseFloat(place.lon) };
+    placeInput.value = place.display_name;
+    suggestionsList.classList.add('d-none');
+    
+    document.getElementById('targetName').innerText = place.display_name.split(',')[0];
+    
+    if (marker) map.removeLayer(marker);
+    marker = L.marker([targetCoords.lat, targetCoords.lng]).addTo(map);
+    map.setView([targetCoords.lat, targetCoords.lng], 16);
+}
+
+// B. ACTIVAR RADAR
+document.getElementById('activateBtn').addEventListener('click', function() {
+    if (!targetCoords) return alert("Selecciona un destino primero");
     
     Notification.requestPermission();
-
-    if (watchId) navigator.geolocation.clearWatch(watchId);
+    this.innerText = "RADAR ACTIVO";
+    this.classList.replace('btn-outline-light', 'btn-danger');
 
     watchId = navigator.geolocation.watchPosition(pos => {
         const { latitude, longitude } = pos.coords;
         
-        // Actualizar posición usuario en mapa
         if (userMarker) map.removeLayer(userMarker);
-        userMarker = L.circleMarker([latitude, longitude], { color: '#ff0031', radius: 8 }).addTo(map);
+        userMarker = L.circleMarker([latitude, longitude], { color: 'white', radius: 10 }).addTo(map);
 
         const dist = calcularDistancia(latitude, longitude, targetCoords.lat, targetCoords.lng);
-        document.getElementById('distance').innerText = `${dist.toFixed(0)}m`;
+        document.getElementById('distance').innerText = `${dist.toFixed(0)} m`;
 
-        // Si está a menos de 150 metros, disparar ráfaga
-        if (dist < 150) {
-            dispararRaf
+        if (dist < 200) { // Alerta a 200 metros
+            notificarLlegada();
+        }
+    }, null, { enableHighAccuracy: true });
+});
+
+function notificarLlegada() {
+    for(let i=0; i<3; i++) {
+        setTimeout(() => {
+            new Notification("LLEGANDO A DESTINO", { 
+                body: "Estás muy cerca de tu objetivo.",
+                icon: "icon.png"
+            });
+        }, i * 4000);
+    }
+}
+
+function calcularDistancia(lat1, lon1, lat2, lon2) {
+    const R = 6371e3;
+    const φ1 = lat1 * Math.PI/180, φ2 = lat2 * Math.PI/180, Δλ = (lon2-lon1) * Math.PI/180;
+    return Math.acos( Math.sin(φ1)*Math.sin(φ2) + Math.cos(φ1)*Math.cos(φ2) * Math.cos(Δλ) ) * R;
+}
