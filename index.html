@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoFocus Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1 class="logo">GEO<span>FOCUS</span></h1>
+        </header>
+
+        <section class="search-section">
+            <input type="text" id="placeInput" placeholder="Escribe un lugar (ej: Agora Mall)">
+            <button id="searchBtn">BUSCAR</button>
+        </section>
+
+        <div id="map"></div>
+
+        <section class="info-card">
+            <div class="status-group">
+                <span class="label">OBJETIVO:</span>
+                <span id="targetName">Ninguno</span>
+            </div>
+            <div class="status-group">
+                <span class="label">DISTANCIA:</span>
+                <span id="distance">0m</span>
+            </div>
+            <button id="activateBtn" class="btn-main">ACTIVAR RADAR</button>
+        </section>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+:root {
+    --bg: #0b0b0b;
+    --card: #1a1a1a;
+    --accent: #ff0031;
+    --text: #ffffff;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 450px;
+    padding: 20px;
+}
+
+.logo span { color: var(--accent); }
+
+#map {
+    height: 300px;
+    border-radius: 15px;
+    margin: 20px 0;
+    border: 1px solid #333;
+}
+
+.search-section {
+    display: flex;
+    gap: 10px;
+}
+
+input {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid #333;
+    padding: 12px;
+    color: white;
+    border-radius: 8px;
+}
+
+.btn-main {
+    width: 100%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 15px;
+    font-weight: bold;
+    border-radius: 12px;
+    margin-top: 20px;
+}
