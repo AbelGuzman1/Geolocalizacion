@@ -12,11 +12,11 @@
 </head>
 <body class="bg-black text-white">
     <div class="container-fluid p-3 app-container">
-        <header class="text-center py-2">
+        <header class="text-center pb-3">
             <h1 class="h5 fw-bold logo">GEO<span class="text-danger">FOCUS</span> <small class="text-secondary opacity-50" style="font-size: 0.5em;">RD</small></h1>
         </header>
 
-        <div class="search-wrapper position-relative mb-3">
+        <div class="search-wrapper position-relative mb-3" style="z-index: 1050;">
             <div class="input-group shadow-lg">
                 <span class="input-group-text bg-dark border-0 text-danger"><i class="bi bi-geo-alt-fill"></i></span>
                 <input type="text" id="placeInput" class="form-control bg-dark text-white border-0 py-3" placeholder="¿A dónde vas en RD?" autocomplete="off">
@@ -24,17 +24,17 @@
             <ul id="suggestions" class="list-group position-absolute w-100 shadow-lg mt-1 d-none"></ul>
         </div>
 
-        <div id="map" class="mb-3 rounded-4 shadow-lg"></div>
+        <div id="map" class="mb-3 rounded-4 shadow-lg overflow-hidden" style="height: 40vh;"></div>
 
         <div class="card bg-dark border-0 shadow-lg rounded-4 overflow-hidden">
             <div class="card-body p-4">
                 <div class="row align-items-center mb-4">
                     <div class="col-7">
-                        <p class="text-secondary small mb-1 text-uppercase tracking-wider">Destino seleccionado</p>
-                        <h2 id="targetName" class="h6 mb-0 fw-bold text-truncate text-white">Esperando destino...</h2>
+                        <p class="text-secondary small mb-1 text-uppercase tracking-wider" style="font-size: 0.65rem;">Destino</p>
+                        <h2 id="targetName" class="h6 mb-0 fw-bold text-truncate text-white">Esperando selección...</h2>
                     </div>
                     <div class="col-5 text-end border-start border-secondary border-opacity-25">
-                        <p class="text-secondary small mb-1 text-uppercase">Distancia</p>
+                        <p class="text-secondary small mb-1 text-uppercase" style="font-size: 0.65rem;">Distancia</p>
                         <span id="distance" class="text-danger fw-bold h4 mb-0">0 m</span>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                     <button id="activateBtn" class="btn btn-danger w-100 py-3 fw-bold rounded-3 shadow-sm text-uppercase">
                         Iniciar Viaje
                     </button>
-                    <button id="stopBtn" class="btn btn-outline-secondary d-none px-4 rounded-3 border-0">
+                    <button id="stopBtn" class="btn btn-outline-secondary d-none px-4 rounded-3 border-secondary border-opacity-25">
                         <i class="bi bi-arrow-clockwise fs-4"></i>
                     </button>
                 </div>
