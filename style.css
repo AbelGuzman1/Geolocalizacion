@@ -1,55 +1,45 @@
 :root {
-    --bg: #0b0b0b;
-    --card: #1a1a1a;
-    --accent: #ff0031;
-    --text: #ffffff;
+    --nothing-red: #ff0031;
 }
 
 body {
-    background-color: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    margin: 0;
-    display: flex;
-    justify-content: center;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    overflow-x: hidden;
 }
 
 .app-container {
-    width: 100%;
-    max-width: 450px;
-    padding: 20px;
+    max-width: 500px;
+    min-height: 100vh;
 }
-
-.logo span { color: var(--accent); }
 
 #map {
-    height: 300px;
-    border-radius: 15px;
-    margin: 20px 0;
-    border: 1px solid #333;
+    height: 35vh;
+    border-radius: 20px;
+    z-index: 1;
 }
 
-.search-section {
-    display: flex;
-    gap: 10px;
+#suggestions {
+    z-index: 1000;
+    max-height: 250px;
+    overflow-y: auto;
 }
 
-input {
-    flex: 1;
-    background: var(--card);
-    border: 1px solid #333;
-    padding: 12px;
+.list-group-item-dark {
+    background-color: #1a1a1a;
+    border-color: #333;
     color: white;
-    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
 }
 
-.btn-main {
-    width: 100%;
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 15px;
-    font-weight: bold;
-    border-radius: 12px;
-    margin-top: 20px;
+.list-group-item-dark:hover {
+    background-color: #2a2a2a;
 }
+
+input:focus {
+    box-shadow: none !important;
+    border-color: var(--nothing-red) !important;
+}
+
+/* Estilo para que parezca app nativa */
+.card { border: 1px solid rgba(255,255,255,0.1); }
