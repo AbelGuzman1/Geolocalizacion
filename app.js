@@ -1,7 +1,8 @@
 let map = L.map('map', { zoomControl: false }).setView([18.4861, -69.9312], 12);
 
+// Capa de mapa Dark Matter (Sin filtros CSS adicionales para evitar oscuridad extrema)
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; OpenStreetMap'
+    attribution: '&copy; CartoDB'
 }).addTo(map);
 
 let marker, userMarker, watchId, routeLine;
@@ -18,6 +19,7 @@ placeInput.addEventListener('input', async (e) => {
     if (val.length < 3) return suggestionsList.classList.add('d-none');
 
     try {
+        // Filtrado estricto para República Dominicana
         const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${val}&countrycodes=do&limit=5`);
         const data = await res.json();
         
@@ -32,7 +34,7 @@ placeInput.addEventListener('input', async (e) => {
                 suggestionsList.appendChild(li);
             });
         }
-    } catch (err) { console.error(err); }
+    } catch (err) { console.error("Error buscando:", err); }
 });
 
 function seleccionarLugar(place) {
@@ -46,8 +48,10 @@ function seleccionarLugar(place) {
     map.setView([targetCoords.lat, targetCoords.lng], 15);
 }
 
-// B. LÓGICA DE ACTUALIZACIÓN DE TRAYECTO
+// B. LÓGICA DE ACTUALIZACIÓN DE TRAYECTO (VISTA EN TIEMPO REAL)
 function actualizarTrayecto(lat, lon) {
+    if (!targetCoords) return;
+
     const userPos = [lat, lon];
     const targetPos = [targetCoords.lat, targetCoords.lng];
 
@@ -57,21 +61,26 @@ function actualizarTrayecto(lat, lon) {
         color: '#ff0031',
         weight: 4,
         dashArray: '10, 15',
-        opacity: 0.8
+        opacity: 0.9
     }).addTo(map);
 
-    // 2. Marcador de usuario (Punto azul)
+    // 2. Marcador de usuario (Círculo azul GPS)
     if (userMarker) map.removeLayer(userMarker);
     userMarker = L.circleMarker(userPos, { 
-        color: '#fff', fillColor: '#007bff', fillOpacity: 1, weight: 2, radius: 9 
+        color: '#fff', 
+        fillColor: '#007bff', 
+        fillOpacity: 1, 
+        weight: 2, 
+        radius: 9 
     }).addTo(map);
 
-    // 3. Distancia y Ajuste de vista
+    // 3. Cálculo de distancia
     const dist = calcularDistancia(lat, lon, targetCoords.lat, targetCoords.lng);
     document.getElementById('distance').innerText = `${dist.toFixed(0)} m`;
 
+    // 4. VISTA DINÁMICA: Ajusta el zoom para que AMBOS puntos siempre sean visibles
     const bounds = L.latLngBounds([userPos, targetPos]);
-    map.fitBounds(bounds, { padding: [70, 70] });
+    map.fitBounds(bounds, { padding: [70, 70], animate: true });
 
     if (dist < 150) notificarLlegada();
 }
@@ -87,37 +96,36 @@ activateBtn.addEventListener('click', function() {
     this.disabled = true;
     stopBtn.classList.remove('d-none');
 
-    new Notification("✅ Viaje Iniciado", {
-        body: `Rumbo a ${document.getElementById('targetName').innerText}`,
+    // Notificación inicial
+    new Notification("✅ Rastreo Iniciado", {
+        body: `Destino: ${document.getElementById('targetName').innerText}`,
     });
 
-    // CAPTURA INICIAL (Para mostrar la línea al instante)
+    // CAPTURA INICIAL INMEDIATA
     navigator.geolocation.getCurrentPosition(pos => {
         actualizarTrayecto(pos.coords.latitude, pos.coords.longitude);
-    }, err => console.error("Error GPS inicial"), { enableHighAccuracy: true });
+    }, err => alert("Activa el GPS para ver la ruta"), { enableHighAccuracy: true });
 
-    // SEGUIMIENTO EN VIVO
+    // SEGUIMIENTO CONTINUO
     watchId = navigator.geolocation.watchPosition(pos => {
         actualizarTrayecto(pos.coords.latitude, pos.coords.longitude);
-    }, null, { enableHighAccuracy: true });
+    }, null, { enableHighAccuracy: true, maximumAge: 0 });
 });
 
 stopBtn.addEventListener('click', () => location.reload());
 
 function notificarLlegada() {
-    for(let i=0; i<3; i++) {
-        setTimeout(() => {
-            new Notification("🚨 ¡ESTÁS CERCA!", { 
-                body: "El destino está a menos de 150 metros.",
-                icon: "icon.png"
-            });
-        }, i * 4000);
+    if (Notification.permission === "granted") {
+        new Notification("🚨 ¡ESTÁS LLEGANDO!", { 
+            body: "El destino está a menos de 150 metros.",
+        });
     }
 }
 
 function calcularDistancia(lat1, lon1, lat2, lon2) {
     const R = 6371e3;
-    const dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180;
+    const dLat = (lat2-lat1)*Math.PI/180;
+    const dLon = (lon2-lon1)*Math.PI/180;
     const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 }
